@@ -21,7 +21,7 @@ const TeamDashboard: React.FC<TeamDashboardProps> = ({ team, onBack }) => {
     { name: 'Available', value: team.capSpace, color: team.capSpace >= 0 ? '#16a34a' : '#ef4444' },
   ];
 
-  const forwards = team.roster.filter(p => ['C', 'LW', 'RW'].includes(p.position));
+  const forwards = team.roster.filter(p => ['C', 'LW', 'RW', 'L', 'R'].includes(p.position));
   const defense = team.roster.filter(p => p.position === 'D');
   const goalies = team.roster.filter(p => p.position === 'G');
 
@@ -49,7 +49,10 @@ const TeamDashboard: React.FC<TeamDashboardProps> = ({ team, onBack }) => {
             <tbody className="bg-white divide-y divide-slate-200">
               {players.map((player) => (
                 <tr key={player.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-2 whitespace-nowrap text-sm font-medium text-slate-900">{player.name}</td>
+                  <td className="px-6 py-2 whitespace-nowrap text-sm font-medium text-slate-900 flex items-center">
+                    {player.headshot && <img src={player.headshot} className="h-6 w-6 rounded-full mr-2" alt="" />}
+                    {player.name}
+                  </td>
                   <td className="px-6 py-2 whitespace-nowrap text-sm text-slate-500">{player.position}</td>
                   <td className="px-6 py-2 whitespace-nowrap text-sm text-slate-500">{player.age}</td>
                   <td className="px-6 py-2 whitespace-nowrap text-sm text-slate-900 font-mono text-right font-medium">
@@ -95,8 +98,12 @@ const TeamDashboard: React.FC<TeamDashboardProps> = ({ team, onBack }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
           <div>
             <div className="flex items-center space-x-4 mb-2">
-              <div className="h-16 w-16 bg-slate-900 rounded-full flex items-center justify-center text-white font-bold text-2xl border-4 border-slate-200">
-                {team.logoCode}
+              <div className="h-16 w-16 flex items-center justify-center">
+                {team.logoUrl ? (
+                  <img src={team.logoUrl} alt={team.name} className="max-h-full max-w-full" />
+                ) : (
+                  <div className="bg-slate-900 rounded-full h-full w-full flex items-center justify-center text-white font-bold text-2xl border-4 border-slate-200">{team.logoCode}</div>
+                )}
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-slate-900">{team.name}</h1>

@@ -10,6 +10,8 @@ export interface Player {
   expiryStatus: 'UFA' | 'RFA';
   clause?: 'NMC' | 'NTC' | 'M-NTC' | null;
   team: string;
+  headshot?: string;
+  number?: number;
 }
 
 export interface Team {
@@ -17,6 +19,7 @@ export interface Team {
   name: string;
   city: string;
   logoCode: string; // e.g. 'TOR' for Toronto
+  logoUrl?: string; // URL from API
   roster: Player[];
   capSpace: number;
   projectedCapSpace: number;

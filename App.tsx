@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from './components/Layout';
 import TeamDashboard from './components/TeamDashboard';
 import TeamList from './components/TeamList';
 import { CBAExpertChat, ArmchairGM } from './components/CapTools';
 import { AppView, Team, Player } from './types';
 import { Activity, TrendingUp, DollarSign } from 'lucide-react';
-import { NHL_TEAMS } from './data/teams';
+import { fetchAllTeamsData } from './services/nhlService';
 
 const HomeDashboard = ({ onViewTeam }: { onViewTeam: () => void }) => (
   <div className="space-y-8">
@@ -89,9 +89,14 @@ const PlayerProfileModal = ({ player, onClose }: { player: Player; onClose: () =
   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
     <div className="bg-white rounded-lg shadow-xl max-w-lg w-full overflow-hidden">
       <div className="bg-slate-900 text-white p-6 flex justify-between items-start">
-        <div>
-          <h2 className="text-2xl font-bold">{player.name}</h2>
-          <p className="text-slate-400">{player.position} | {player.team}</p>
+        <div className="flex items-center gap-4">
+          {player.headshot && (
+            <img src={player.headshot} alt={player.name} className="w-16 h-16 rounded-full border-2 border-white bg-slate-800" />
+          )}
+          <div>
+            <h2 className="text-2xl font-bold">{player.name}</h2>
+            <p className="text-slate-400">#{player.number} | {player.position} | {player.team}</p>
+          </div>
         </div>
         <button onClick={onClose} className="text-slate-400 hover:text-white">
           <span className="text-2xl">&times;</span>
@@ -117,7 +122,7 @@ const PlayerProfileModal = ({ player, onClose }: { player: Player; onClose: () =
          </div>
          <div className="mt-6 pt-4 border-t border-slate-100">
            <p className="text-xs text-slate-400 italic">
-             Data source: NHL Team Database (Updated Oct 2024)
+             Data source: NHL API (Contracts are simulated for demonstration)
            </p>
          </div>
       </div>
@@ -127,8 +132,20 @@ const PlayerProfileModal = ({ player, onClose }: { player: Player; onClose: () =
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
+  const [teams, setTeams] = useState<Team[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [searchedPlayer, setSearchedPlayer] = useState<Player | null>(null);
+  const [isLoadingTeams, setIsLoadingTeams] = useState(false);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoadingTeams(true);
+      const fetchedTeams = await fetchAllTeamsData();
+      setTeams(fetchedTeams);
+      setIsLoadingTeams(false);
+    };
+    loadData();
+  }, []);
 
   const handlePlayerFound = (player: Player) => {
     setSearchedPlayer(player);
@@ -136,7 +153,7 @@ const App: React.FC = () => {
 
   const handleTeamSelect = (team: Team) => {
     setSelectedTeam(team);
-    // Stay on TEAM view but show dashboard
+    setCurrentView(AppView.TEAM);
   };
 
   const handleBackToTeams = () => {
@@ -159,12 +176,11 @@ const App: React.FC = () => {
         if (selectedTeam) {
           return <TeamDashboard team={selectedTeam} onBack={handleBackToTeams} />;
         }
-        return <TeamList onSelectTeam={handleTeamSelect} />;
+        return <TeamList teams={teams} onSelectTeam={handleTeamSelect} />;
       case AppView.GM_TOOL:
-        // Use selected team if available, otherwise default to Toronto for demo or force selection
-        // For simplicity, let's default to the first team or ask user to select.
-        // We will pass the first team for now if none selected, or the selected one.
-        const gmTeam = selectedTeam || NHL_TEAMS.find(t => t.id === 'tor')!;
+        // Use selected team if available, otherwise default to first available
+        const gmTeam = selectedTeam || teams[0];
+        if (!gmTeam) return <div className="p-10 text-center">Loading teams for GM Tool...</div>;
         return <ArmchairGM initialTeam={gmTeam} />;
       case AppView.CBA_EXPERT:
         return (
@@ -186,6 +202,7 @@ const App: React.FC = () => {
       currentView={currentView} 
       setCurrentView={handleSetView}
       onPlayerFound={handlePlayerFound}
+      teams={teams}
     >
       {renderContent()}
       {searchedPlayer && (

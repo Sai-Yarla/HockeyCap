@@ -1,26 +1,35 @@
 import React, { useState } from 'react';
 import { Search, Menu, X, DollarSign, Calculator, Users, HelpCircle, FileText } from 'lucide-react';
-import { AppView, Player } from '../types';
+import { AppView, Player, Team } from '../types';
 import { searchPlayerOrTeam } from '../services/geminiService';
-import { findLocalPlayer } from '../data/teams';
 
 interface LayoutProps {
   children: React.ReactNode;
   currentView: AppView;
   setCurrentView: (view: AppView) => void;
   onPlayerFound: (player: Player) => void;
+  teams: Team[]; // Added prop
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, currentView, setCurrentView, onPlayerFound }) => {
+const Layout: React.FC<LayoutProps> = ({ children, currentView, setCurrentView, onPlayerFound, teams }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+
+  const findLocalPlayer = (query: string): Player | null => {
+    const lowerQuery = query.toLowerCase();
+    for (const team of teams) {
+      const player = team.roster.find(p => p.name.toLowerCase().includes(lowerQuery));
+      if (player) return player;
+    }
+    return null;
+  };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
 
-    // 1. Try Local Search First (No API call)
+    // 1. Try Local Search First (Fast, uses loaded API data)
     const localResult = findLocalPlayer(searchQuery);
     if (localResult) {
       onPlayerFound(localResult);
@@ -28,7 +37,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentView, setCurrentView, 
       return;
     }
 
-    // 2. Fallback to Gemini API
+    // 2. Fallback to Gemini API if not found in loaded rosters
     setIsSearching(true);
     const player = await searchPlayerOrTeam(searchQuery);
     setIsSearching(false);
@@ -37,7 +46,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentView, setCurrentView, 
       onPlayerFound(player);
       setSearchQuery('');
     } else {
-      alert("Player not found in local database or via AI search. Please check your spelling or API key.");
+      alert("Player not found in loaded rosters or via AI search. Please check your spelling.");
     }
   };
 
