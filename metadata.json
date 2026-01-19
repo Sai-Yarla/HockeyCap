@@ -1,0 +1,5 @@
+{
+  "name": "HockeyCap",
+  "description": "A functional replica of the beloved hockey salary cap resource, featuring interactive rosters, cap calculators, and an AI-powered CBA expert.",
+  "requestFramePermissions": []
+}
