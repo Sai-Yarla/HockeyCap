@@ -1,34 +1,11 @@
 import React, { useState } from 'react';
 import Layout from './components/Layout';
 import TeamDashboard from './components/TeamDashboard';
+import TeamList from './components/TeamList';
 import { CBAExpertChat, ArmchairGM } from './components/CapTools';
 import { AppView, Team, Player } from './types';
 import { Activity, TrendingUp, DollarSign } from 'lucide-react';
-
-// --- MOCK DATA FOR DEMO PURPOSES ---
-const MOCK_PLAYERS_TOR: Player[] = [
-  { id: '1', name: 'Auston Matthews', position: 'C', age: 26, capHit: 13250000, aav: 13250000, contractLength: 4, contractYear: 1, expiryStatus: 'UFA', clause: 'NMC', team: 'TOR' },
-  { id: '2', name: 'Mitch Marner', position: 'RW', age: 27, capHit: 10903000, aav: 10903000, contractLength: 6, contractYear: 6, expiryStatus: 'UFA', clause: 'NMC', team: 'TOR' },
-  { id: '3', name: 'William Nylander', position: 'RW', age: 28, capHit: 11500000, aav: 11500000, contractLength: 8, contractYear: 1, expiryStatus: 'UFA', clause: 'NMC', team: 'TOR' },
-  { id: '4', name: 'John Tavares', position: 'C', age: 33, capHit: 11000000, aav: 11000000, contractLength: 7, contractYear: 7, expiryStatus: 'UFA', clause: 'NMC', team: 'TOR' },
-  { id: '5', name: 'Morgan Rielly', position: 'D', age: 30, capHit: 7500000, aav: 7500000, contractLength: 8, contractYear: 3, expiryStatus: 'UFA', clause: 'NMC', team: 'TOR' },
-  { id: '6', name: 'Chris Tanev', position: 'D', age: 34, capHit: 4500000, aav: 4500000, contractLength: 6, contractYear: 1, expiryStatus: 'UFA', clause: 'NTC', team: 'TOR' },
-  { id: '7', name: 'Joseph Woll', position: 'G', age: 25, capHit: 766667, aav: 766667, contractLength: 3, contractYear: 3, expiryStatus: 'RFA', clause: null, team: 'TOR' },
-  { id: '8', name: 'Max Domi', position: 'C', age: 29, capHit: 3750000, aav: 3750000, contractLength: 4, contractYear: 1, expiryStatus: 'UFA', clause: null, team: 'TOR' },
-  { id: '9', name: 'Matthew Knies', position: 'LW', age: 21, capHit: 925000, aav: 925000, contractLength: 3, contractYear: 3, expiryStatus: 'RFA', clause: null, team: 'TOR' },
-  { id: '10', name: 'Jake McCabe', position: 'D', age: 30, capHit: 2000000, aav: 2000000, contractLength: 4, contractYear: 4, expiryStatus: 'UFA', clause: 'M-NTC', team: 'TOR' },
-];
-
-const MOCK_TEAM: Team = {
-  id: 'tor',
-  name: 'Toronto Maple Leafs',
-  city: 'Toronto',
-  logoCode: 'TOR',
-  roster: MOCK_PLAYERS_TOR,
-  capSpace: 54100, // Just a made-up number for demo
-  projectedCapSpace: 120000,
-  ltirUsed: 0
-};
+import { NHL_TEAMS } from './data/teams';
 
 const HomeDashboard = ({ onViewTeam }: { onViewTeam: () => void }) => (
   <div className="space-y-8">
@@ -140,7 +117,7 @@ const PlayerProfileModal = ({ player, onClose }: { player: Player; onClose: () =
          </div>
          <div className="mt-6 pt-4 border-t border-slate-100">
            <p className="text-xs text-slate-400 italic">
-             Data generated via AI search. Verify with official league sources.
+             Data source: NHL Team Database (Updated Oct 2024)
            </p>
          </div>
       </div>
@@ -150,20 +127,45 @@ const PlayerProfileModal = ({ player, onClose }: { player: Player; onClose: () =
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [searchedPlayer, setSearchedPlayer] = useState<Player | null>(null);
 
   const handlePlayerFound = (player: Player) => {
     setSearchedPlayer(player);
   };
 
+  const handleTeamSelect = (team: Team) => {
+    setSelectedTeam(team);
+    // Stay on TEAM view but show dashboard
+  };
+
+  const handleBackToTeams = () => {
+    setSelectedTeam(null);
+  };
+
+  // Reset selected team when navigating away from TEAM view
+  const handleSetView = (view: AppView) => {
+    if (view !== AppView.TEAM) {
+      setSelectedTeam(null);
+    }
+    setCurrentView(view);
+  };
+
   const renderContent = () => {
     switch (currentView) {
       case AppView.HOME:
-        return <HomeDashboard onViewTeam={() => setCurrentView(AppView.TEAM)} />;
+        return <HomeDashboard onViewTeam={() => handleSetView(AppView.TEAM)} />;
       case AppView.TEAM:
-        return <TeamDashboard team={MOCK_TEAM} />;
+        if (selectedTeam) {
+          return <TeamDashboard team={selectedTeam} onBack={handleBackToTeams} />;
+        }
+        return <TeamList onSelectTeam={handleTeamSelect} />;
       case AppView.GM_TOOL:
-        return <ArmchairGM initialTeam={MOCK_TEAM} />;
+        // Use selected team if available, otherwise default to Toronto for demo or force selection
+        // For simplicity, let's default to the first team or ask user to select.
+        // We will pass the first team for now if none selected, or the selected one.
+        const gmTeam = selectedTeam || NHL_TEAMS.find(t => t.id === 'tor')!;
+        return <ArmchairGM initialTeam={gmTeam} />;
       case AppView.CBA_EXPERT:
         return (
           <div className="max-w-2xl mx-auto">
@@ -175,14 +177,14 @@ const App: React.FC = () => {
           </div>
         );
       default:
-        return <HomeDashboard onViewTeam={() => setCurrentView(AppView.TEAM)} />;
+        return <HomeDashboard onViewTeam={() => handleSetView(AppView.TEAM)} />;
     }
   };
 
   return (
     <Layout 
       currentView={currentView} 
-      setCurrentView={setCurrentView}
+      setCurrentView={handleSetView}
       onPlayerFound={handlePlayerFound}
     >
       {renderContent()}

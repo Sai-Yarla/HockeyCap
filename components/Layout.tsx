@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, Menu, X, DollarSign, Calculator, Users, HelpCircle, FileText } from 'lucide-react';
 import { AppView, Player } from '../types';
 import { searchPlayerOrTeam } from '../services/geminiService';
+import { findLocalPlayer } from '../data/teams';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -19,6 +20,15 @@ const Layout: React.FC<LayoutProps> = ({ children, currentView, setCurrentView, 
     e.preventDefault();
     if (!searchQuery.trim()) return;
 
+    // 1. Try Local Search First (No API call)
+    const localResult = findLocalPlayer(searchQuery);
+    if (localResult) {
+      onPlayerFound(localResult);
+      setSearchQuery('');
+      return;
+    }
+
+    // 2. Fallback to Gemini API
     setIsSearching(true);
     const player = await searchPlayerOrTeam(searchQuery);
     setIsSearching(false);
@@ -27,7 +37,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentView, setCurrentView, 
       onPlayerFound(player);
       setSearchQuery('');
     } else {
-      alert("Player not found or API unavailable. Try 'Connor McDavid' or ensure API key is set.");
+      alert("Player not found in local database or via AI search. Please check your spelling or API key.");
     }
   };
 
