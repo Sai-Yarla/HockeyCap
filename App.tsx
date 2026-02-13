@@ -6,6 +6,7 @@ import { CBAExpertChat, ArmchairGM } from './components/CapTools';
 import { AppView, Team, Player } from './types';
 import { Activity, TrendingUp, DollarSign } from 'lucide-react';
 import { fetchAllTeamsData } from './services/nhlService';
+import { scrapePuckPedia } from './services/puckpediaService';
 
 const HomeDashboard = ({ onViewTeam }: { onViewTeam: () => void }) => (
   <div className="space-y-8">
@@ -130,6 +131,13 @@ const PlayerProfileModal = ({ player, onClose }: { player: Player; onClose: () =
   </div>
 );
 
+// Type for the persistent storage of scraped contracts
+interface ScrapedContractsDB {
+  [teamId: string]: {
+    [playerName: string]: Partial<Player>;
+  };
+}
+
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
   const [teams, setTeams] = useState<Team[]>([]);
@@ -137,10 +145,71 @@ const App: React.FC = () => {
   const [searchedPlayer, setSearchedPlayer] = useState<Player | null>(null);
   const [isLoadingTeams, setIsLoadingTeams] = useState(false);
 
+  // Helper to merge scraped data into a team's roster
+  const mergeTeamData = (team: Team, scrapedContracts: Record<string, Partial<Player>>): Team => {
+    if (!scrapedContracts) return team;
+
+    const updatePlayer = (p: Player) => {
+      // Normalize player name for fuzzy matching (lowercase + remove accents)
+      const nameKey = p.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      // Try exact name key, or check if any key includes the last name
+      let scraped = scrapedContracts[nameKey];
+      
+      // Fallback: try finding by partial inclusion if exact fail
+      if (!scraped) {
+         const keys = Object.keys(scrapedContracts);
+         const partialMatch = keys.find(k => nameKey.includes(k) || k.includes(nameKey));
+         if (partialMatch) scraped = scrapedContracts[partialMatch];
+      }
+
+      if (scraped) {
+        return { ...p, ...scraped };
+      }
+      return p;
+    };
+
+    const newRoster = team.roster.map(updatePlayer);
+    const newNonRoster = team.nonRoster.map(updatePlayer);
+
+    // Recalculate cap space based on updated hits
+    // Note: This simple calculation assumes all active roster players count fully.
+    const rosterCap = newRoster.reduce((sum, p) => sum + p.capHit, 0);
+    const capCeiling = 88000000;
+    
+    return {
+      ...team,
+      roster: newRoster,
+      nonRoster: newNonRoster,
+      capSpace: capCeiling - rosterCap,
+      projectedCapSpace: (capCeiling - rosterCap) + 100000 // Mock buffer
+    };
+  };
+
   useEffect(() => {
     const loadData = async () => {
       setIsLoadingTeams(true);
       const fetchedTeams = await fetchAllTeamsData();
+      
+      // Load any persisted scraped data
+      const stored = localStorage.getItem('hockeycap_scraped_contracts');
+      if (stored) {
+        try {
+          const db: ScrapedContractsDB = JSON.parse(stored);
+          const mergedTeams = fetchedTeams.map(team => {
+             const teamScrapes = db[team.id] || db[team.logoCode.toLowerCase()];
+             if (teamScrapes) {
+               return mergeTeamData(team, teamScrapes);
+             }
+             return team;
+          });
+          setTeams(mergedTeams);
+          setIsLoadingTeams(false);
+          return;
+        } catch (e) {
+          console.error("Failed to parse stored contracts", e);
+        }
+      }
+
       setTeams(fetchedTeams);
       setIsLoadingTeams(false);
     };
@@ -168,13 +237,47 @@ const App: React.FC = () => {
     setCurrentView(view);
   };
 
+  const handleSyncContracts = async (team: Team, importedData?: Record<string, Partial<Player>>) => {
+    let scrapedData = importedData;
+
+    // If no imported data provided, try the live scrape (fallback)
+    if (!scrapedData) {
+        try {
+            scrapedData = await scrapePuckPedia(team.name);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    if (!scrapedData || Object.keys(scrapedData).length === 0) {
+        alert("Could not sync contracts. If automatic sync fails, use the 'Import' button with the python script output.");
+        return;
+    }
+    
+    // Save to local storage
+    const stored = localStorage.getItem('hockeycap_scraped_contracts');
+    let db: ScrapedContractsDB = stored ? JSON.parse(stored) : {};
+    db[team.id] = scrapedData;
+    localStorage.setItem('hockeycap_scraped_contracts', JSON.stringify(db));
+
+    // Update state
+    const updatedTeam = mergeTeamData(team, scrapedData);
+    
+    // Update the teams array and the selected team
+    setTeams(prev => prev.map(t => t.id === team.id ? updatedTeam : t));
+    setSelectedTeam(updatedTeam);
+    
+    const count = Object.keys(scrapedData).length;
+    alert(`Successfully synced ${count} contracts for ${team.name}.`);
+  };
+
   const renderContent = () => {
     switch (currentView) {
       case AppView.HOME:
         return <HomeDashboard onViewTeam={() => handleSetView(AppView.TEAM)} />;
       case AppView.TEAM:
         if (selectedTeam) {
-          return <TeamDashboard team={selectedTeam} onBack={handleBackToTeams} />;
+          return <TeamDashboard team={selectedTeam} onBack={handleBackToTeams} onSyncContracts={handleSyncContracts} />;
         }
         return <TeamList teams={teams} onSelectTeam={handleTeamSelect} />;
       case AppView.GM_TOOL:

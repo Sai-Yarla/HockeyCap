@@ -7,7 +7,7 @@ const createPlayer = (
   team: string, clause: 'NMC'|'NTC'|'M-NTC'|null = null
 ): Player => ({
   id, name, position: pos, age, capHit, aav: capHit, 
-  contractLength: length, contractYear: year, expiryStatus: status, clause, team
+  contractLength: length, contractYear: year, expiryStatus: status, clause, team, isSigned: true
 });
 
 export const NHL_TEAMS: Team[] = [
@@ -21,7 +21,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('ana4', 'Cam Fowler', 'D', 32, 6500000, 8, 7, 'UFA', 'ANA', 'M-NTC'),
       createPlayer('ana5', 'Radko Gudas', 'D', 33, 4000000, 3, 2, 'UFA', 'ANA', 'NTC'),
       createPlayer('ana6', 'John Gibson', 'G', 30, 6400000, 8, 6, 'UFA', 'ANA', 'M-NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'bos', name: 'Boston Bruins', city: 'Boston', logoCode: 'BOS',
@@ -33,7 +34,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('bos4', 'Hampus Lindholm', 'D', 30, 6500000, 8, 3, 'UFA', 'BOS', 'NTC'),
       createPlayer('bos5', 'Jeremy Swayman', 'G', 25, 8250000, 8, 1, 'UFA', 'BOS'),
       createPlayer('bos6', 'Elias Lindholm', 'C', 29, 7750000, 7, 1, 'UFA', 'BOS', 'NMC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'buf', name: 'Buffalo Sabres', city: 'Buffalo', logoCode: 'BUF',
@@ -45,7 +47,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('buf4', 'Alex Tuch', 'RW', 27, 4750000, 7, 3, 'UFA', 'BUF', 'M-NTC'),
       createPlayer('buf5', 'Owen Power', 'D', 21, 8350000, 7, 1, 'UFA', 'BUF'),
       createPlayer('buf6', 'Ukko-Pekka Luukkonen', 'G', 25, 4750000, 5, 1, 'UFA', 'BUF'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'cgy', name: 'Calgary Flames', city: 'Calgary', logoCode: 'CGY',
@@ -56,7 +59,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('cgy3', 'MacKenzie Weegar', 'D', 30, 6250000, 8, 2, 'UFA', 'CGY', 'NTC'),
       createPlayer('cgy4', 'Rasmus Andersson', 'D', 27, 4550000, 6, 4, 'UFA', 'CGY', 'M-NTC'),
       createPlayer('cgy5', 'Mikael Backlund', 'C', 35, 4500000, 2, 1, 'UFA', 'CGY', 'NMC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'car', name: 'Carolina Hurricanes', city: 'Raleigh', logoCode: 'CAR',
@@ -68,7 +72,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('car4', 'Jaccob Slavin', 'D', 30, 6461000, 8, 1, 'UFA', 'CAR', 'NMC'),
       createPlayer('car5', 'Brent Burns', 'D', 39, 5280000, 8, 8, 'UFA', 'CAR', 'M-NTC'),
       createPlayer('car6', 'Frederik Andersen', 'G', 34, 3400000, 2, 2, 'UFA', 'CAR', 'M-NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'chi', name: 'Chicago Blackhawks', city: 'Chicago', logoCode: 'CHI',
@@ -80,7 +85,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('chi4', 'Nick Foligno', 'LW', 36, 4500000, 2, 1, 'UFA', 'CHI'),
       createPlayer('chi5', 'Tyler Bertuzzi', 'LW', 29, 5500000, 4, 1, 'UFA', 'CHI', 'NMC'),
       createPlayer('chi6', 'Teuvo Teravainen', 'RW', 29, 5400000, 3, 1, 'UFA', 'CHI', 'M-NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'col', name: 'Colorado Avalanche', city: 'Denver', logoCode: 'COL',
@@ -92,7 +98,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('col4', 'Gabriel Landeskog', 'LW', 31, 7000000, 8, 4, 'UFA', 'COL', 'NMC'),
       createPlayer('col5', 'Valeri Nichushkin', 'RW', 29, 6125000, 8, 3, 'UFA', 'COL', 'NMC'),
       createPlayer('col6', 'Devon Toews', 'D', 30, 7250000, 7, 1, 'UFA', 'COL', 'NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'cbj', name: 'Columbus Blue Jackets', city: 'Columbus', logoCode: 'CBJ',
@@ -104,7 +111,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('cbj4', 'Boone Jenner', 'C', 30, 3750000, 4, 3, 'UFA', 'CBJ', 'M-NTC'),
       createPlayer('cbj5', 'Elvis Merzlikins', 'G', 30, 5400000, 5, 3, 'UFA', 'CBJ', 'M-NTC'),
       createPlayer('cbj6', 'Adam Fantilli', 'C', 19, 950000, 3, 2, 'RFA', 'CBJ'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'dal', name: 'Dallas Stars', city: 'Dallas', logoCode: 'DAL',
@@ -116,7 +124,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('dal4', 'Tyler Seguin', 'C', 32, 9850000, 8, 8, 'UFA', 'DAL', 'NMC'),
       createPlayer('dal5', 'Jamie Benn', 'LW', 34, 9500000, 8, 8, 'UFA', 'DAL', 'NMC'),
       createPlayer('dal6', 'Jake Oettinger', 'G', 25, 4000000, 3, 3, 'RFA', 'DAL'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'det', name: 'Detroit Red Wings', city: 'Detroit', logoCode: 'DET',
@@ -128,7 +137,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('det4', 'Moritz Seider', 'D', 23, 8550000, 7, 1, 'UFA', 'DET', 'NTC'),
       createPlayer('det5', 'Patrick Kane', 'RW', 35, 4000000, 1, 1, 'UFA', 'DET', 'NMC'),
       createPlayer('det6', 'Ben Chiarot', 'D', 33, 4750000, 4, 3, 'UFA', 'DET', 'M-NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'edm', name: 'Edmonton Oilers', city: 'Edmonton', logoCode: 'EDM',
@@ -140,7 +150,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('edm4', 'Zach Hyman', 'LW', 31, 5500000, 7, 4, 'UFA', 'EDM', 'NMC'),
       createPlayer('edm5', 'Evan Bouchard', 'D', 24, 3900000, 2, 2, 'RFA', 'EDM'),
       createPlayer('edm6', 'Ryan Nugent-Hopkins', 'C', 31, 5125000, 8, 4, 'UFA', 'EDM', 'NMC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'fla', name: 'Florida Panthers', city: 'Sunrise', logoCode: 'FLA',
@@ -152,7 +163,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('fla4', 'Aaron Ekblad', 'D', 28, 7500000, 8, 8, 'UFA', 'FLA', 'M-NTC'),
       createPlayer('fla5', 'Sergei Bobrovsky', 'G', 35, 10000000, 7, 6, 'UFA', 'FLA', 'NMC'),
       createPlayer('fla6', 'Gustav Forsling', 'D', 27, 5750000, 8, 1, 'UFA', 'FLA', 'NMC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'lak', name: 'Los Angeles Kings', city: 'Los Angeles', logoCode: 'LAK',
@@ -164,7 +176,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('lak4', 'Adrian Kempe', 'RW', 27, 5500000, 4, 3, 'UFA', 'LAK', 'M-NTC'),
       createPlayer('lak5', 'Phillip Danault', 'C', 31, 5500000, 6, 4, 'UFA', 'LAK', 'M-NTC'),
       createPlayer('lak6', 'Quinton Byfield', 'C', 21, 6250000, 5, 1, 'UFA', 'LAK'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'min', name: 'Minnesota Wild', city: 'Saint Paul', logoCode: 'MIN',
@@ -176,7 +189,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('min4', 'Jared Spurgeon', 'D', 34, 7575000, 7, 5, 'UFA', 'MIN', 'M-NTC'),
       createPlayer('min5', 'Jonas Brodin', 'D', 30, 6000000, 7, 4, 'UFA', 'MIN', 'NMC'),
       createPlayer('min6', 'Brock Faber', 'D', 21, 8500000, 8, 1, 'UFA', 'MIN'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'mtl', name: 'Montreal Canadiens', city: 'Montreal', logoCode: 'MTL',
@@ -188,7 +202,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('mtl4', 'Mike Matheson', 'D', 30, 4875000, 8, 6, 'UFA', 'MTL', 'M-NTC'),
       createPlayer('mtl5', 'Patrik Laine', 'RW', 26, 8700000, 4, 3, 'UFA', 'MTL', 'M-NTC'),
       createPlayer('mtl6', 'Brendan Gallagher', 'RW', 32, 6500000, 6, 4, 'UFA', 'MTL', 'M-NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'nsh', name: 'Nashville Predators', city: 'Nashville', logoCode: 'NSH',
@@ -200,7 +215,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('nsh4', 'Jonathan Marchessault', 'RW', 33, 5500000, 5, 1, 'UFA', 'NSH', 'NTC'),
       createPlayer('nsh5', 'Brady Skjei', 'D', 30, 7000000, 7, 1, 'UFA', 'NSH', 'M-NTC'),
       createPlayer('nsh6', 'Juuse Saros', 'G', 29, 7740000, 8, 1, 'UFA', 'NSH'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'njd', name: 'New Jersey Devils', city: 'Newark', logoCode: 'NJD',
@@ -212,7 +228,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('njd4', 'Timo Meier', 'RW', 27, 8800000, 8, 2, 'UFA', 'NJD', 'M-NTC'),
       createPlayer('njd5', 'Jesper Bratt', 'LW', 25, 7875000, 8, 2, 'UFA', 'NJD', 'NMC'),
       createPlayer('njd6', 'Jacob Markstrom', 'G', 34, 6000000, 6, 5, 'UFA', 'NJD', 'NMC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'nyi', name: 'New York Islanders', city: 'Elmont', logoCode: 'NYI',
@@ -224,7 +241,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('nyi4', 'Noah Dobson', 'D', 24, 4000000, 3, 3, 'RFA', 'NYI'),
       createPlayer('nyi5', 'Ryan Pulock', 'D', 29, 6150000, 8, 3, 'UFA', 'NYI', 'NTC'),
       createPlayer('nyi6', 'Anders Lee', 'LW', 33, 7000000, 7, 6, 'UFA', 'NYI', 'M-NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'nyr', name: 'New York Rangers', city: 'New York', logoCode: 'NYR',
@@ -236,7 +254,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('nyr4', 'Chris Kreider', 'LW', 33, 6500000, 7, 5, 'UFA', 'NYR', 'M-NTC'),
       createPlayer('nyr5', 'Igor Shesterkin', 'G', 28, 5666667, 4, 4, 'UFA', 'NYR'),
       createPlayer('nyr6', 'Jacob Trouba', 'D', 30, 8000000, 7, 6, 'UFA', 'NYR', 'M-NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'ott', name: 'Ottawa Senators', city: 'Ottawa', logoCode: 'OTT',
@@ -248,7 +267,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('ott4', 'Jake Sanderson', 'D', 21, 8050000, 8, 1, 'UFA', 'OTT', 'M-NTC'),
       createPlayer('ott5', 'Claude Giroux', 'RW', 36, 6500000, 3, 3, 'UFA', 'OTT', 'NMC'),
       createPlayer('ott6', 'Linus Ullmark', 'G', 30, 5000000, 4, 4, 'UFA', 'OTT', 'M-NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'phi', name: 'Philadelphia Flyers', city: 'Philadelphia', logoCode: 'PHI',
@@ -260,7 +280,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('phi4', 'Owen Tippett', 'RW', 25, 6200000, 8, 1, 'UFA', 'PHI'),
       createPlayer('phi5', 'Joel Farabee', 'LW', 24, 5000000, 6, 3, 'UFA', 'PHI'),
       createPlayer('phi6', 'Matvei Michkov', 'RW', 19, 950000, 3, 1, 'RFA', 'PHI'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'pit', name: 'Pittsburgh Penguins', city: 'Pittsburgh', logoCode: 'PIT',
@@ -272,7 +293,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('pit4', 'Kris Letang', 'D', 37, 6100000, 6, 3, 'UFA', 'PIT', 'NMC'),
       createPlayer('pit5', 'Bryan Rust', 'RW', 32, 5125000, 6, 3, 'UFA', 'PIT', 'NMC'),
       createPlayer('pit6', 'Tristan Jarry', 'G', 29, 5375000, 5, 2, 'UFA', 'PIT', 'M-NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'sjs', name: 'San Jose Sharks', city: 'San Jose', logoCode: 'SJS',
@@ -284,7 +306,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('sjs4', 'Will Smith', 'C', 19, 950000, 3, 1, 'RFA', 'SJS'),
       createPlayer('sjs5', 'Tyler Toffoli', 'RW', 32, 6000000, 4, 1, 'UFA', 'SJS'),
       createPlayer('sjs6', 'Mikael Granlund', 'C', 32, 5000000, 4, 4, 'UFA', 'SJS'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'sea', name: 'Seattle Kraken', city: 'Seattle', logoCode: 'SEA',
@@ -296,7 +319,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('sea4', 'Chandler Stephenson', 'C', 30, 6250000, 7, 1, 'UFA', 'SEA', 'NMC'),
       createPlayer('sea5', 'Brandon Montour', 'D', 30, 7142857, 7, 1, 'UFA', 'SEA', 'NMC'),
       createPlayer('sea6', 'Andre Burakovsky', 'LW', 29, 5500000, 5, 3, 'UFA', 'SEA', 'M-NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'stl', name: 'St. Louis Blues', city: 'St. Louis', logoCode: 'STL',
@@ -308,7 +332,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('stl4', 'Brayden Schenn', 'C', 32, 6500000, 8, 5, 'UFA', 'STL', 'NTC'),
       createPlayer('stl5', 'Justin Faulk', 'D', 32, 6500000, 7, 5, 'UFA', 'STL', 'NTC'),
       createPlayer('stl6', 'Jordan Binnington', 'G', 30, 6000000, 6, 4, 'UFA', 'STL', 'NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'tbl', name: 'Tampa Bay Lightning', city: 'Tampa Bay', logoCode: 'TBL',
@@ -320,7 +345,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('tbl4', 'Victor Hedman', 'D', 33, 8000000, 4, 1, 'UFA', 'TBL', 'NMC'),
       createPlayer('tbl5', 'Jake Guentzel', 'LW', 29, 9000000, 7, 1, 'UFA', 'TBL', 'NMC'),
       createPlayer('tbl6', 'Ryan McDonagh', 'D', 34, 6750000, 7, 6, 'UFA', 'TBL', 'NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'tor', name: 'Toronto Maple Leafs', city: 'Toronto', logoCode: 'TOR',
@@ -333,7 +359,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('tor5', 'Morgan Rielly', 'D', 30, 7500000, 8, 3, 'UFA', 'TOR', 'NMC'),
       createPlayer('tor6', 'Chris Tanev', 'D', 34, 4500000, 6, 1, 'UFA', 'TOR', 'NTC'),
       createPlayer('tor7', 'Joseph Woll', 'G', 25, 766667, 3, 3, 'RFA', 'TOR'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'uta', name: 'Utah Hockey Club', city: 'Salt Lake City', logoCode: 'UTA',
@@ -345,7 +372,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('uta4', 'Lawson Crouse', 'LW', 26, 4300000, 5, 3, 'UFA', 'UTA', 'M-NTC'),
       createPlayer('uta5', 'Logan Cooley', 'C', 20, 950000, 3, 2, 'RFA', 'UTA'),
       createPlayer('uta6', 'Sean Durzi', 'D', 25, 6000000, 4, 1, 'UFA', 'UTA'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'van', name: 'Vancouver Canucks', city: 'Vancouver', logoCode: 'VAN',
@@ -357,7 +385,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('van4', 'Filip Hronek', 'D', 26, 7250000, 8, 1, 'UFA', 'VAN'),
       createPlayer('van5', 'Thatcher Demko', 'G', 28, 5000000, 5, 4, 'UFA', 'VAN'),
       createPlayer('van6', 'Brock Boeser', 'RW', 27, 6650000, 3, 3, 'UFA', 'VAN', 'M-NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'vgk', name: 'Vegas Golden Knights', city: 'Las Vegas', logoCode: 'VGK',
@@ -369,7 +398,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('vgk4', 'Alex Pietrangelo', 'D', 34, 8800000, 7, 5, 'UFA', 'VGK', 'NMC'),
       createPlayer('vgk5', 'Noah Hanifin', 'D', 27, 7350000, 8, 1, 'UFA', 'VGK', 'NMC'),
       createPlayer('vgk6', 'Shea Theodore', 'D', 28, 5200000, 7, 7, 'UFA', 'VGK', 'M-NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'wsh', name: 'Washington Capitals', city: 'Washington', logoCode: 'WSH',
@@ -381,7 +411,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('wsh4', 'Dylan Strome', 'C', 27, 5000000, 5, 2, 'UFA', 'WSH'),
       createPlayer('wsh5', 'Pierre-Luc Dubois', 'C', 25, 8500000, 8, 2, 'UFA', 'WSH', 'NMC'),
       createPlayer('wsh6', 'Jakob Chychrun', 'D', 26, 4600000, 6, 6, 'UFA', 'WSH', 'M-NTC'),
-    ]
+    ],
+    nonRoster: []
   },
   {
     id: 'wpg', name: 'Winnipeg Jets', city: 'Winnipeg', logoCode: 'WPG',
@@ -393,7 +424,8 @@ export const NHL_TEAMS: Team[] = [
       createPlayer('wpg4', 'Josh Morrissey', 'D', 29, 6250000, 8, 5, 'UFA', 'WPG', 'M-NTC'),
       createPlayer('wpg5', 'Nikolaj Ehlers', 'RW', 28, 6000000, 7, 7, 'UFA', 'WPG', 'M-NTC'),
       createPlayer('wpg6', 'Gabriel Vilardi', 'RW', 24, 3437500, 2, 2, 'RFA', 'WPG'),
-    ]
+    ],
+    nonRoster: []
   }
 ];
 

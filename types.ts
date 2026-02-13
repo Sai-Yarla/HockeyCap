@@ -12,6 +12,7 @@ export interface Player {
   team: string;
   headshot?: string;
   number?: number;
+  isSigned: boolean; // True if they count towards the 50 contract limit
 }
 
 export interface Team {
@@ -21,6 +22,7 @@ export interface Team {
   logoCode: string; // e.g. 'TOR' for Toronto
   logoUrl?: string; // URL from API
   roster: Player[];
+  nonRoster: Player[]; // Prospects and reserves
   capSpace: number;
   projectedCapSpace: number;
   ltirUsed: number;
