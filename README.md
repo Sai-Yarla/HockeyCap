@@ -1,22 +1,17 @@
 # HockeyCap
-
-**The Cap is King.**
-
 HockeyCap is a comprehensive salary cap analysis tool designed for hockey fans, armchair GMs, and capologists. Inspired by the legacy of CapFriendly, this application provides interactive rosters, buyout calculations, and an AI-powered expert to answer complex questions about the Collective Bargaining Agreement (CBA).
 
 ## Screenshots
 
 ### League Dashboard
-![League Overview](docs/screenshots/league_view.png)
+<img width="1087" height="694" alt="image" src="https://github.com/user-attachments/assets/6e80e198-f9ba-40b9-b5e5-2e2fbccf5499" />
+
 *Real-time overview of league-wide cap space and team status.*
 
 ### Team Analysis
-![Team Dashboard](docs/screenshots/team_view.png)
-*Detailed roster breakdown including Cap Hits, AAV, Terms, and No-Move Clauses.*
+<img width="1083" height="693" alt="image" src="https://github.com/user-attachments/assets/ebfc7351-5052-472e-ac56-e7f355770b81" />
 
-### Armchair GM Mode
-![GM Tool](docs/screenshots/gm_tool.png)
-*Interactive roster management to simulate trades and buyouts.*
+*Detailed roster breakdown including Cap Hits, AAV, Terms, and No-Move Clauses.*
 
 ## Features
 
